@@ -8,12 +8,15 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 class EngineTest {
 
     @Test
-    void verifyTestStats() {
-        EngineTestKit
+    void verifyTestExecution() {
+        var execution = EngineTestKit
                 .engine("picotest")
                 .selectors(selectClass(ExampleTestCase.class))
-                .execute()
-                .containers()
-                .assertStatistics(stats -> stats.succeeded(1).started(1));
+                .execute();
+        execution.containers()
+                .assertStatistics(stats -> stats.started(3).succeeded(3));
+        execution.tests()
+                .assertStatistics(stats -> stats.started(1).succeeded(1));
     }
+
 }
