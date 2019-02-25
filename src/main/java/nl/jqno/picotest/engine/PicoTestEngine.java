@@ -2,6 +2,7 @@ package nl.jqno.picotest.engine;
 
 import nl.jqno.picotest.Test;
 import org.junit.platform.engine.*;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
@@ -19,14 +20,21 @@ public class PicoTestEngine implements TestEngine {
     @Override
     public TestDescriptor discover(EngineDiscoveryRequest request, UniqueId uniqueId) {
         var descriptor = new EngineDescriptor(uniqueId, DISPLAY_NAME);
-        try {
-            var testClassName = "nl.jqno.picotest.ExampleTestCase";
-            var exampleUniqueId = uniqueId.append("class", testClassName);
-            var exampleTestCase = new PicoTestContainerDescriptor(exampleUniqueId, testClassName);
-            descriptor.addChild(exampleTestCase);
-            discoverTestCases(exampleTestCase, Class.forName(testClassName));
-        } catch (ClassNotFoundException e) {
-            // ¯\_(ツ)_/¯
+        var testClassName = "nl.jqno.picotest.examples.ExampleTest";
+        var classSelectors = request.getSelectorsByType(ClassSelector.class);
+        var isSelected = classSelectors.stream()
+                .map(cs -> cs.getJavaClass().getCanonicalName())
+                .anyMatch(c -> c.equals(testClassName));
+
+        if (isSelected) {
+            try {
+                var exampleUniqueId = uniqueId.append("class", testClassName);
+                var exampleTestCase = new PicoTestContainerDescriptor(exampleUniqueId, testClassName);
+                descriptor.addChild(exampleTestCase);
+                discoverTestCases(exampleTestCase, Class.forName(testClassName));
+            } catch (ClassNotFoundException e) {
+                // ¯\_(ツ)_/¯
+            }
         }
         return descriptor;
     }
