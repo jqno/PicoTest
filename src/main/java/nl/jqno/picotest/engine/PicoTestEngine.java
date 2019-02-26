@@ -15,8 +15,8 @@ public class PicoTestEngine implements TestEngine {
     @Override
     public TestDescriptor discover(EngineDiscoveryRequest request, UniqueId uniqueId) {
         var descriptor = new EngineDescriptor(uniqueId, DISPLAY_NAME);
-        var discoverer = new PicoTestDiscoverer(request, descriptor);
-        discoverer.discover();
+        var discoverer = new PicoTestDiscoverer(request);
+        discoverer.discover(descriptor);
         return descriptor;
     }
 

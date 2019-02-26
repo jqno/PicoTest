@@ -15,7 +15,7 @@ class EngineTest {
                 .selectors(selectClass(ExampleTest.class))
                 .execute();
         execution.containers()
-                .assertStatistics(stats -> stats.started(3).succeeded(3));
+                .assertStatistics(stats -> stats.started(4).succeeded(4));
         execution.tests()
                 .assertStatistics(stats -> stats.started(2).succeeded(1).failed(1));
     }

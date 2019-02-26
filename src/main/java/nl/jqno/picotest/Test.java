@@ -5,7 +5,6 @@ import org.junit.platform.commons.annotation.Testable;
 
 public abstract class Test {
 
-    public abstract void fixture();
     private TestCollector collector = null;
 
     @Testable

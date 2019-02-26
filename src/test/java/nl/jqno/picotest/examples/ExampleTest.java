@@ -4,8 +4,7 @@ import nl.jqno.picotest.Test;
 
 public class ExampleTest extends Test {
 
-    @Override
-    public void fixture() {
+    public void demo() {
         test("1 + 1 == 2", () -> {
             assert 1 + 1 == 2;
         });
