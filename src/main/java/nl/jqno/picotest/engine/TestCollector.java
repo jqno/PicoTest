@@ -1,17 +1,26 @@
 package nl.jqno.picotest.engine;
 
-import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TestCollector {
-    private TestDescriptor descriptor;
+    private final UniqueId uniqueId;
+    private final List<PicoTestDescriptor> tests = new ArrayList<>();
 
-    public TestCollector(TestDescriptor descriptor) {
-        this.descriptor = descriptor;
+    public TestCollector(UniqueId uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public void accept(String description, Runnable test) {
-        var uniqueId = descriptor.getUniqueId().append("case", description);
-        var d = new PicoTestDescriptor(uniqueId, description, test);
-        descriptor.addChild(d);
+        var testcaseId = uniqueId.append("case", description);
+        var d = new PicoTestDescriptor(testcaseId, description, test);
+        tests.add(d);
+    }
+
+    public List<PicoTestDescriptor> getTests() {
+        return Collections.unmodifiableList(tests);
     }
 }
