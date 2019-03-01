@@ -7,8 +7,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.*;
 import org.junit.platform.engine.support.filter.ClasspathScanningSupport;
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,7 +18,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class PicoTestDiscoverer {
-    private static final Objenesis OBJENESIS = new ObjenesisStd();
     private final EngineDiscoveryRequest request;
 
     public PicoTestDiscoverer(EngineDiscoveryRequest request) {
@@ -64,7 +61,8 @@ public class PicoTestDiscoverer {
     private void resolveClass(TestDescriptor descriptor, Class<?> c) {
         var classTestDescriptor = classDescriptorFor(descriptor, c);
         var methods = findMethods(c);
-        methods.forEach(m -> resolveMethod(classTestDescriptor, instantiate(c), m));
+        var instance = instantiate(c);
+        instance.ifPresent(i -> methods.forEach(m -> resolveMethod(classTestDescriptor, i, m)));
     }
 
     private List<Method> findMethods(Class<?> c) {
@@ -77,7 +75,8 @@ public class PicoTestDiscoverer {
     private void resolveClassWithMethod(TestDescriptor descriptor, Class<?> c, String methodName) {
         var classTestDescriptor = classDescriptorFor(descriptor, c);
         var method = methodFor(c, methodName);
-        method.ifPresent(m -> resolveMethod(classTestDescriptor, instantiate(c), m));
+        var instance = instantiate(c);
+        method.ifPresent(m -> instance.ifPresent(i -> resolveMethod(classTestDescriptor, i, m)));
     }
 
     private void resolveMethod(TestDescriptor descriptor, Test instance, Method method) {
@@ -99,12 +98,12 @@ public class PicoTestDiscoverer {
         if (testcaseName.isPresent() && methodName.isPresent() && klass.isPresent()) {
             var instance = instantiate(klass.get());
             var method = methodFor(klass.get(), methodName.get());
-            method.ifPresent(m -> {
-                discoverTestcases(descriptor.getUniqueId(), instance, m)
+            method.ifPresent(m -> instance.ifPresent(i ->
+                discoverTestcases(descriptor.getUniqueId(), i, m)
                         .stream()
                         .filter(d -> d.getUniqueId().equals(selectedUniqueId))
-                        .forEach(descriptor::addChild);
-            });
+                        .forEach(descriptor::addChild)
+            ));
         } else if (methodName.isPresent() && klass.isPresent()) {
             resolveClassWithMethod(descriptor, klass.get(), methodName.get());
         } else if (klass.isPresent()) {
@@ -140,8 +139,14 @@ public class PicoTestDiscoverer {
         }
     }
 
-    private Test instantiate(Class<?> c) {
-        return OBJENESIS.newInstance((Class<? extends Test>) c);
+    private Optional<Test> instantiate(Class<?> c) {
+        try {
+            var constructor = c.getConstructor();
+            return Optional.of((Test)constructor.newInstance());
+        }
+        catch (ReflectiveOperationException | ClassCastException ignored) {
+            return Optional.empty();
+        }
     }
 
     private TestDescriptor classDescriptorFor(TestDescriptor descriptor, Class<?> c) {
