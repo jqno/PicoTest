@@ -48,11 +48,9 @@ public class PicoTestEngine implements TestEngine {
             listener.executionStarted(testDescriptor);
             try {
                 testDescriptor.getTest().run();
-            } catch (AssertionError e) {
+            }
+            catch (Throwable e) {
                 listener.executionFinished(testDescriptor, TestExecutionResult.failed(e));
-                return;
-            } catch (Throwable e) {
-                listener.executionFinished(testDescriptor, TestExecutionResult.aborted(e));
                 return;
             }
             listener.executionFinished(testDescriptor, TestExecutionResult.successful());

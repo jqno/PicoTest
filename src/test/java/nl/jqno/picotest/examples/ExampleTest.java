@@ -13,7 +13,7 @@ public class ExampleTest extends Test {
             assert 1 + 1 == 3;
         });
 
-        test("an aborted test", () -> {
+        test("an errored test", () -> {
             throw new IllegalStateException();
         });
 

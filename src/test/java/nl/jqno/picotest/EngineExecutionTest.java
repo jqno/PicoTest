@@ -18,8 +18,8 @@ class EngineExecutionTest {
                 .assertStatistics(stats -> stats
                         .started(4)
                         .succeeded(2)
-                        .failed(1)
-                        .aborted(1)
+                        .failed(2)
+                        .aborted(0)
                         .skipped(1)
                         .finished(4));
     }
