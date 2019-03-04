@@ -16,6 +16,10 @@ public class ExampleTest extends Test {
         test("an aborted test", () -> {
             throw new IllegalStateException();
         });
+
+        skip("sometimes you want to skip things", "a skipped test", () -> {
+           assert 1 + 1 == 2;
+        });
     }
 
     public void anotherContainer() {

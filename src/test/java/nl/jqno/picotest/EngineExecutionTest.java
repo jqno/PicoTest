@@ -20,6 +20,7 @@ class EngineExecutionTest {
                         .succeeded(2)
                         .failed(1)
                         .aborted(1)
+                        .skipped(1)
                         .finished(4));
     }
 

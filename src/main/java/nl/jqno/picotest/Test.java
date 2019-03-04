@@ -12,6 +12,11 @@ public abstract class Test {
         collector.accept(description, test);
     }
 
+    @Testable
+    public final void skip(String reason, String description, Runnable test) {
+        collector.acceptSkip(description, reason, test);
+    }
+
     public void setCollector(TestCollector collector) {
         this.collector = collector;
     }

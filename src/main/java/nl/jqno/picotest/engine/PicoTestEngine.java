@@ -41,18 +41,21 @@ public class PicoTestEngine implements TestEngine {
     }
 
     private void executeTest(PicoTestDescriptor testDescriptor, EngineExecutionListener listener) {
-        listener.executionStarted(testDescriptor);
-        try {
-            testDescriptor.getTest().run();
+        if (testDescriptor.isSkipped()) {
+            listener.executionSkipped(testDescriptor, testDescriptor.getSkipReason());
         }
-        catch (AssertionError e) {
-            listener.executionFinished(testDescriptor, TestExecutionResult.failed(e));
-            return;
+        else {
+            listener.executionStarted(testDescriptor);
+            try {
+                testDescriptor.getTest().run();
+            } catch (AssertionError e) {
+                listener.executionFinished(testDescriptor, TestExecutionResult.failed(e));
+                return;
+            } catch (Throwable e) {
+                listener.executionFinished(testDescriptor, TestExecutionResult.aborted(e));
+                return;
+            }
+            listener.executionFinished(testDescriptor, TestExecutionResult.successful());
         }
-        catch (Throwable e) {
-            listener.executionFinished(testDescriptor, TestExecutionResult.aborted(e));
-            return;
-        }
-        listener.executionFinished(testDescriptor, TestExecutionResult.successful());
     }
 }

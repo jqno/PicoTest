@@ -15,8 +15,16 @@ public class TestCollector {
     }
 
     public void accept(String description, Runnable test) {
+        accept(description, false, "", test);
+    }
+
+    public void acceptSkip(String description, String reason, Runnable test) {
+        accept(description, true, reason, test);
+    }
+
+    private void accept(String description, boolean isSkipped, String reason, Runnable test) {
         var testcaseId = uniqueId.append("case", description);
-        var d = new PicoTestDescriptor(testcaseId, description, test);
+        var d = new PicoTestDescriptor(testcaseId, description, isSkipped, reason, test);
         tests.add(d);
     }
 
