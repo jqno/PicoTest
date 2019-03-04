@@ -26,7 +26,7 @@ public class EngineSelectorTest {
     @Test
     void classpathRootSelector() throws URISyntaxException {
         var classpathRoot = Paths.get(testToSelect.getProtectionDomain().getCodeSource().getLocation().toURI());
-        verifySelector(5, selectClasspathRoots(Collections.singleton(classpathRoot)).get(0));
+        verifySelector(6, selectClasspathRoots(Collections.singleton(classpathRoot)).get(0));
     }
 
     @Test

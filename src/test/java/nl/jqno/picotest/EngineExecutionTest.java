@@ -6,18 +6,21 @@ import org.junit.platform.testkit.engine.EngineTestKit;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
-class EngineTest {
+class EngineExecutionTest {
 
     @Test
     void verifyTestExecution() {
-        var execution = EngineTestKit
+        EngineTestKit
                 .engine("picotest")
                 .selectors(selectClass(ExampleTest.class))
-                .execute();
-        execution.containers()
-                .assertStatistics(stats -> stats.started(4).succeeded(4));
-        execution.tests()
-                .assertStatistics(stats -> stats.started(2).succeeded(1).failed(1));
+                .execute()
+                .tests()
+                .assertStatistics(stats -> stats
+                        .started(4)
+                        .succeeded(2)
+                        .failed(1)
+                        .aborted(1)
+                        .finished(4));
     }
 
 }
