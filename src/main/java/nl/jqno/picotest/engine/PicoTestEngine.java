@@ -30,10 +30,10 @@ public class PicoTestEngine implements TestEngine {
     private void executeContainer(TestDescriptor testDescriptor, EngineExecutionListener listener) {
         listener.executionStarted(testDescriptor);
         testDescriptor.getChildren().forEach(d -> {
-            if (d instanceof PicoTestContainerDescriptor) {
+            if (d.isContainer()) {
                 executeContainer(d, listener);
             }
-            if (d instanceof PicoTestDescriptor) {
+            if (d.isTest()) {
                 executeTest((PicoTestDescriptor)d, listener);
             }
         });
