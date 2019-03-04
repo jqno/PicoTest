@@ -14,6 +14,7 @@ public class PicoTestMethodContainerDescriptor extends AbstractTestDescriptor {
 
     public PicoTestMethodContainerDescriptor(TestDescriptor parent, Method method) {
         super(generateUniqueId(parent, method.getName()), method.getName());
+        parent.addChild(this);
         this.setParent(parent);
         this.method = method;
     }

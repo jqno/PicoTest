@@ -13,6 +13,7 @@ public class PicoTestClassContainerDescriptor extends AbstractTestDescriptor {
 
     public PicoTestClassContainerDescriptor(TestDescriptor parent, Class<?> klass) {
         super(generateUniqueId(parent, klass.getCanonicalName()), klass.getSimpleName());
+        parent.addChild(this);
         this.setParent(parent);
         this.klass = klass;
     }

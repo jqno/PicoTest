@@ -59,7 +59,7 @@ public class PicoTestDiscoverer {
     }
 
     private void resolveClass(TestDescriptor descriptor, Class<?> c) {
-        var classTestDescriptor = classDescriptorFor(descriptor, c);
+        var classTestDescriptor = new PicoTestClassContainerDescriptor(descriptor, c);
         var methods = findMethods(c);
         var instance = instantiate(c);
         instance.ifPresent(i -> methods.forEach(m -> resolveMethod(classTestDescriptor, i, m)));
@@ -73,14 +73,14 @@ public class PicoTestDiscoverer {
     }
 
     private void resolveClassWithMethod(TestDescriptor descriptor, Class<?> c, String methodName) {
-        var classTestDescriptor = classDescriptorFor(descriptor, c);
+        var classTestDescriptor = new PicoTestClassContainerDescriptor(descriptor, c);
         var method = methodFor(c, methodName);
         var instance = instantiate(c);
         method.ifPresent(m -> instance.ifPresent(i -> resolveMethod(classTestDescriptor, i, m)));
     }
 
     private void resolveMethod(TestDescriptor descriptor, Test instance, Method method) {
-        var methodTestDescriptor = methodDescriptorFor(descriptor, method);
+        var methodTestDescriptor = new PicoTestMethodContainerDescriptor(descriptor, method);
         resolveTestcases(methodTestDescriptor, instance, method);
     }
 
@@ -147,17 +147,5 @@ public class PicoTestDiscoverer {
         catch (ReflectiveOperationException | ClassCastException ignored) {
             return Optional.empty();
         }
-    }
-
-    private TestDescriptor classDescriptorFor(TestDescriptor parent, Class<?> c) {
-        var descriptor = new PicoTestClassContainerDescriptor(parent, c);
-        parent.addChild(descriptor);
-        return descriptor;
-    }
-
-    private TestDescriptor methodDescriptorFor(TestDescriptor parent, Method m) {
-        var descriptor = new PicoTestMethodContainerDescriptor(parent, m);
-        parent.addChild(descriptor);
-        return descriptor;
     }
 }
