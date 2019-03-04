@@ -19,28 +19,29 @@ public class EngineSelectorTest {
 
     @Test
     void moduleSelector() {
-        // TODO
+        // Running the tests on the classpath, so only the root container will trigger
+        verifySelector(1, selectModule("nl.jqno.picotest"));
     }
 
     @Test
     void classpathRootSelector() throws URISyntaxException {
         var classpathRoot = Paths.get(testToSelect.getProtectionDomain().getCodeSource().getLocation().toURI());
-        verifySelector(6, selectClasspathRoots(Collections.singleton(classpathRoot)).get(0));
+        verifySelector(5, selectClasspathRoots(Collections.singleton(classpathRoot)).get(0));
     }
 
     @Test
     void packageSelector() {
-        verifySelector(4, selectPackage(testToSelect.getPackageName()));
+        verifySelector(3, selectPackage(testToSelect.getPackageName()));
     }
 
     @Test
     void classSelector() {
-        verifySelector(4, selectClass(testToSelect));
+        verifySelector(3, selectClass(testToSelect));
     }
 
     @Test
     void methodSelector() {
-        verifySelector(4, selectMethod(testToSelect, "test"));
+        verifySelector(3, selectMethod(testToSelect, "test"));
     }
 
     @Test
@@ -49,7 +50,7 @@ public class EngineSelectorTest {
                 .append("class", testToSelect.getCanonicalName())
                 .append("method", "test")
                 .append("case", "test");
-        verifySelector(2, selectUniqueId(uniqueId));
+        verifySelector(1, selectUniqueId(uniqueId));
     }
 
     private void verifySelector(int expected, DiscoverySelector... selectors) {

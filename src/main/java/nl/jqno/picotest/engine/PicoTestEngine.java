@@ -24,9 +24,7 @@ public class PicoTestEngine implements TestEngine {
     public void execute(ExecutionRequest request) {
         var root = request.getRootTestDescriptor();
         var listener = request.getEngineExecutionListener();
-        listener.executionStarted(root);
         executeContainer(root, listener);
-        listener.executionFinished(root, TestExecutionResult.successful());
     }
 
     private void executeContainer(TestDescriptor testDescriptor, EngineExecutionListener listener) {
