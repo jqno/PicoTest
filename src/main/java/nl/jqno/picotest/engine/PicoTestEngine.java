@@ -34,13 +34,13 @@ public class PicoTestEngine implements TestEngine {
                 executeContainer(d, listener);
             }
             if (d.isTest()) {
-                executeTest((PicoTestDescriptor)d, listener);
+                executeTest((PicoTestcaseDescriptor)d, listener);
             }
         });
         listener.executionFinished(testDescriptor, TestExecutionResult.successful());
     }
 
-    private void executeTest(PicoTestDescriptor testDescriptor, EngineExecutionListener listener) {
+    private void executeTest(PicoTestcaseDescriptor testDescriptor, EngineExecutionListener listener) {
         if (testDescriptor.isSkipped()) {
             listener.executionSkipped(testDescriptor, testDescriptor.getSkipReason());
         }

@@ -85,7 +85,7 @@ public class PicoTestDiscoverer {
     }
 
     private void resolveTestcases(TestDescriptor descriptor, Test instance, Method method) {
-        discoverTestcases(descriptor.getUniqueId(), instance, method)
+        discoverTestcases(descriptor, instance, method)
                 .forEach(descriptor::addChild);
     }
 
@@ -99,7 +99,7 @@ public class PicoTestDiscoverer {
             var instance = instantiate(klass.get());
             var method = methodFor(klass.get(), methodName.get());
             method.ifPresent(m -> instance.ifPresent(i ->
-                discoverTestcases(descriptor.getUniqueId(), i, m)
+                discoverTestcases(descriptor, i, m)
                         .stream()
                         .filter(d -> d.getUniqueId().equals(selectedUniqueId))
                         .forEach(descriptor::addChild)
@@ -111,8 +111,8 @@ public class PicoTestDiscoverer {
         }
     }
 
-    private List<PicoTestDescriptor> discoverTestcases(UniqueId uniqueId, Test instance, Method method) {
-        var collector = new TestCollector(uniqueId);
+    private List<PicoTestcaseDescriptor> discoverTestcases(TestDescriptor parent, Test instance, Method method) {
+        var collector = new TestCollector(parent);
         instance.setCollector(collector);
         try {
             method.invoke(instance);
@@ -149,18 +149,15 @@ public class PicoTestDiscoverer {
         }
     }
 
-    private TestDescriptor classDescriptorFor(TestDescriptor descriptor, Class<?> c) {
-        return containerDescriptorFor(descriptor, c.getSimpleName(), "class", c.getName());
+    private TestDescriptor classDescriptorFor(TestDescriptor parent, Class<?> c) {
+        var descriptor = new PicoTestClassContainerDescriptor(parent, c);
+        parent.addChild(descriptor);
+        return descriptor;
     }
 
-    private TestDescriptor methodDescriptorFor(TestDescriptor descriptor, Method m) {
-        return containerDescriptorFor(descriptor, m.getName(), "method", m.getName());
-    }
-
-    private TestDescriptor containerDescriptorFor(TestDescriptor descriptor, String displayName, String type, String value) {
-        var classUniqueId = descriptor.getUniqueId().append(type, value);
-        var result = new PicoTestContainerDescriptor(classUniqueId, displayName);
-        descriptor.addChild(result);
-        return result;
+    private TestDescriptor methodDescriptorFor(TestDescriptor parent, Method m) {
+        var descriptor = new PicoTestMethodContainerDescriptor(parent, m);
+        parent.addChild(descriptor);
+        return descriptor;
     }
 }

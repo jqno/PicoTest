@@ -1,17 +1,17 @@
 package nl.jqno.picotest.engine;
 
-import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.TestDescriptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TestCollector {
-    private final UniqueId uniqueId;
-    private final List<PicoTestDescriptor> tests = new ArrayList<>();
+    private final TestDescriptor parent;
+    private final List<PicoTestcaseDescriptor> tests = new ArrayList<>();
 
-    public TestCollector(UniqueId uniqueId) {
-        this.uniqueId = uniqueId;
+    public TestCollector(TestDescriptor parent) {
+        this.parent = parent;
     }
 
     public void accept(String description, Runnable test) {
@@ -23,12 +23,10 @@ public class TestCollector {
     }
 
     private void accept(String description, boolean isSkipped, String reason, Runnable test) {
-        var testcaseId = uniqueId.append("case", description);
-        var d = new PicoTestDescriptor(testcaseId, description, isSkipped, reason, test);
-        tests.add(d);
+        tests.add(new PicoTestcaseDescriptor(parent, description, isSkipped, reason, test));
     }
 
-    public List<PicoTestDescriptor> getTests() {
+    public List<PicoTestcaseDescriptor> getTests() {
         return Collections.unmodifiableList(tests);
     }
 }
