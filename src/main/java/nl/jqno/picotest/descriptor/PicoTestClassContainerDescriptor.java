@@ -1,18 +1,12 @@
 package nl.jqno.picotest.descriptor;
 
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 
-import java.util.Optional;
-
 public class PicoTestClassContainerDescriptor extends PicoTestDescriptor {
-    private final Class<?> klass;
-
     public PicoTestClassContainerDescriptor(TestDescriptor parent, Class<?> klass) {
-        super(parent, generateUniqueId(parent, klass.getCanonicalName()), klass, klass.getSimpleName());
-        this.klass = klass;
+        super(parent, generateUniqueId(parent, klass.getCanonicalName()), klass, klass.getSimpleName(), ClassSource.from(klass));
     }
 
     private static UniqueId generateUniqueId(TestDescriptor parent, String description) {
@@ -22,10 +16,5 @@ public class PicoTestClassContainerDescriptor extends PicoTestDescriptor {
     @Override
     public Type getType() {
         return Type.CONTAINER;
-    }
-
-    @Override
-    public Optional<TestSource> getSource() {
-        return Optional.of(ClassSource.from(klass));
     }
 }
