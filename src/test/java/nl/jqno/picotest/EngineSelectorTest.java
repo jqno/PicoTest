@@ -50,7 +50,7 @@ public class EngineSelectorTest {
                 .append("class", testToSelect.getCanonicalName())
                 .append("method", "test")
                 .append("case", "test");
-        verifySelector(1, selectUniqueId(uniqueId));
+        verifySelector(3, selectUniqueId(uniqueId));
     }
 
     private void verifySelector(int expected, DiscoverySelector... selectors) {

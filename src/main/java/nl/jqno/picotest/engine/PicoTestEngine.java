@@ -1,5 +1,6 @@
 package nl.jqno.picotest.engine;
 
+import nl.jqno.picotest.descriptor.PicoTestcaseDescriptor;
 import org.junit.platform.engine.*;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 

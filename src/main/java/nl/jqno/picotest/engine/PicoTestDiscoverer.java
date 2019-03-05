@@ -1,6 +1,10 @@
 package nl.jqno.picotest.engine;
 
 import nl.jqno.picotest.Test;
+import nl.jqno.picotest.descriptor.PicoTestClassContainerDescriptor;
+import nl.jqno.picotest.descriptor.PicoTestDescriptor;
+import nl.jqno.picotest.descriptor.PicoTestMethodContainerDescriptor;
+import nl.jqno.picotest.descriptor.PicoTestcaseDescriptor;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -79,12 +83,12 @@ public class PicoTestDiscoverer {
         method.ifPresent(m -> instance.ifPresent(i -> resolveMethod(classTestDescriptor, i, m)));
     }
 
-    private void resolveMethod(TestDescriptor descriptor, Test instance, Method method) {
+    private void resolveMethod(PicoTestDescriptor descriptor, Test instance, Method method) {
         var methodTestDescriptor = new PicoTestMethodContainerDescriptor(descriptor, method);
         resolveTestcases(methodTestDescriptor, instance, method);
     }
 
-    private void resolveTestcases(TestDescriptor descriptor, Test instance, Method method) {
+    private void resolveTestcases(PicoTestDescriptor descriptor, Test instance, Method method) {
         discoverTestcases(descriptor, instance, method)
                 .forEach(descriptor::addChild);
     }
@@ -98,12 +102,14 @@ public class PicoTestDiscoverer {
         if (testcaseName.isPresent() && methodName.isPresent() && klass.isPresent()) {
             var instance = instantiate(klass.get());
             var method = methodFor(klass.get(), methodName.get());
-            method.ifPresent(m -> instance.ifPresent(i ->
-                discoverTestcases(descriptor, i, m)
+            method.ifPresent(m -> instance.ifPresent(i -> {
+                var classDescriptor = new PicoTestClassContainerDescriptor(descriptor, klass.get());
+                var methodDescriptor = new PicoTestMethodContainerDescriptor(classDescriptor, m);
+                discoverTestcases(methodDescriptor, i, m)
                         .stream()
                         .filter(d -> d.getUniqueId().equals(selectedUniqueId))
-                        .forEach(descriptor::addChild)
-            ));
+                        .forEach(descriptor::addChild);
+            }));
         } else if (methodName.isPresent() && klass.isPresent()) {
             resolveClassWithMethod(descriptor, klass.get(), methodName.get());
         } else if (klass.isPresent()) {
@@ -111,7 +117,7 @@ public class PicoTestDiscoverer {
         }
     }
 
-    private List<PicoTestcaseDescriptor> discoverTestcases(TestDescriptor parent, Test instance, Method method) {
+    private List<PicoTestcaseDescriptor> discoverTestcases(PicoTestDescriptor parent, Test instance, Method method) {
         var collector = new TestCollector(parent);
         instance.setCollector(collector);
         try {

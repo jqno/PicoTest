@@ -1,20 +1,17 @@
-package nl.jqno.picotest.engine;
+package nl.jqno.picotest.descriptor;
 
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 
 import java.util.Optional;
 
-public class PicoTestClassContainerDescriptor extends AbstractTestDescriptor {
-    private Class<?> klass;
+public class PicoTestClassContainerDescriptor extends PicoTestDescriptor {
+    private final Class<?> klass;
 
     public PicoTestClassContainerDescriptor(TestDescriptor parent, Class<?> klass) {
-        super(generateUniqueId(parent, klass.getCanonicalName()), klass.getSimpleName());
-        parent.addChild(this);
-        this.setParent(parent);
+        super(parent, generateUniqueId(parent, klass.getCanonicalName()), klass, klass.getSimpleName());
         this.klass = klass;
     }
 

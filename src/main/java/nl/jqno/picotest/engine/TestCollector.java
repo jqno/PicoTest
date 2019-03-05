@@ -1,16 +1,17 @@
 package nl.jqno.picotest.engine;
 
-import org.junit.platform.engine.TestDescriptor;
+import nl.jqno.picotest.descriptor.PicoTestDescriptor;
+import nl.jqno.picotest.descriptor.PicoTestcaseDescriptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TestCollector {
-    private final TestDescriptor parent;
+    private final PicoTestDescriptor parent;
     private final List<PicoTestcaseDescriptor> tests = new ArrayList<>();
 
-    public TestCollector(TestDescriptor parent) {
+    public TestCollector(PicoTestDescriptor parent) {
         this.parent = parent;
     }
 
