@@ -49,7 +49,7 @@ public class PicoTestcaseDescriptor extends PicoTestDescriptor {
         return skipReason;
     }
 
-    public void run(Modifier modifier) {
+    public void runFromParent(Modifier modifier) {
         parent.getBlock(modifier).run();
     }
 
