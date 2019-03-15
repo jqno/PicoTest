@@ -26,6 +26,14 @@ public abstract class Test {
         collector.acceptBlock(Modifier.AFTER_EACH, block);
     }
 
+    public final void beforeAll(Runnable block) {
+        collector.acceptBlock(Modifier.BEFORE_ALL, block);
+    }
+
+    public final void afterAll(Runnable block) {
+        collector.acceptBlock(Modifier.AFTER_ALL, block);
+    }
+
     public void setCollector(TestCollector collector) {
         this.collector = collector;
     }

@@ -1,5 +1,6 @@
 package nl.jqno.picotest.engine;
 
+import nl.jqno.picotest.descriptor.PicoTestDescriptor;
 import nl.jqno.picotest.descriptor.PicoTestcaseDescriptor;
 import org.junit.platform.engine.*;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -30,6 +31,8 @@ public class PicoTestEngine implements TestEngine {
 
     private void executeContainer(TestDescriptor testDescriptor, EngineExecutionListener listener) {
         listener.executionStarted(testDescriptor);
+
+        boolean success = runBlock(testDescriptor, Modifier.BEFORE_ALL, listener);
         testDescriptor.getChildren().forEach(d -> {
             if (d.isContainer()) {
                 executeContainer(d, listener);
@@ -38,7 +41,25 @@ public class PicoTestEngine implements TestEngine {
                 executeTest((PicoTestcaseDescriptor)d, listener);
             }
         });
-        listener.executionFinished(testDescriptor, TestExecutionResult.successful());
+        success &= runBlock(testDescriptor, Modifier.AFTER_ALL, listener);
+
+        if (success) {
+            listener.executionFinished(testDescriptor, TestExecutionResult.successful());
+        }
+    }
+
+    private boolean runBlock(TestDescriptor testDescriptor, Modifier modifier, EngineExecutionListener listener) {
+       if (testDescriptor instanceof PicoTestDescriptor) {
+           PicoTestDescriptor ptd = (PicoTestDescriptor)testDescriptor;
+           try {
+               ptd.getBlock(modifier).run();
+           }
+           catch (Throwable e) {
+               listener.executionFinished(testDescriptor, TestExecutionResult.failed(e));
+               return false;
+           }
+       }
+       return true;
     }
 
     private void executeTest(PicoTestcaseDescriptor testDescriptor, EngineExecutionListener listener) {
