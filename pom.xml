@@ -11,6 +11,18 @@
     <name>PicoTest</name>
     <description>An ultra-minimal unit test framework based on the JUnit 5 Platform</description>
 
+    <scm>
+        <url>http://github.com/jqno/PicoTest</url>
+        <connection>scm:git:https://github.com/jqno/PicoTest</connection>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <properties>
         <encoding>UTF-8</encoding>
 
