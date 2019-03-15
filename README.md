@@ -2,7 +2,7 @@
 
 An ultra-minimal unit-testing framework, based on the JUnit 5 Platform.
 
-How to use:
+## How to use:
 
 ```java
 import nl.jqno.picotest.Test;
@@ -33,4 +33,35 @@ public class ExampleTest extends Test {
         });
     }
 }
+```
+
+## How to add to your project
+
+Ensure the following is in your `pom.xml`:
+
+```xml
+<repositories>
+  <repository>
+    <id>bintray-jqno-picotest-repo</id>
+    <url>https://dl.bintray.com/jqno/picotest-repo</url>
+  </repository>
+</repositories>
+
+<build>
+  <plugins>
+    <plugin>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>2.22.1</version>
+    </plugin>
+  </plugins>
+</build>
+
+<dependencies>
+  <dependency>
+    <groupId>nl.jqno.picotest</groupId>
+    <artifactId>picotest</artifactId>
+    <version><!-- insert latest version number here! --></version>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
 ```
