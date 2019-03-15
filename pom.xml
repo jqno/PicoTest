@@ -6,7 +6,7 @@
 
     <groupId>nl.jqno.picotest</groupId>
     <artifactId>picotest</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <name>PicoTest</name>
     <description>An ultra-minimal unit test framework based on the JUnit 5 Platform</description>
