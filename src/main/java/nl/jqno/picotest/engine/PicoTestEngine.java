@@ -50,6 +50,7 @@ public class PicoTestEngine implements TestEngine {
             try {
                 testDescriptor.run(Modifier.BEFORE_EACH);
                 testDescriptor.getTest().run();
+                testDescriptor.run(Modifier.AFTER_EACH);
             }
             catch (Throwable e) {
                 listener.executionFinished(testDescriptor, TestExecutionResult.failed(e));
