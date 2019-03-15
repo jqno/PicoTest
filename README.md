@@ -30,6 +30,10 @@ public class ExampleTest extends Test {
     }
 
     public void anotherContainer() {
+        beforeEach(() -> {
+            System.out.println("Do this first, for each test case");
+        });
+        
         test("1 + 1 == 2", () -> {
             assert 1 + 1 == 2;
         });
