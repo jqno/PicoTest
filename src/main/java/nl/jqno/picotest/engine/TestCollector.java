@@ -27,6 +27,10 @@ public class TestCollector {
         tests.add(new PicoTestcaseDescriptor(parent, description, isSkipped, reason, test));
     }
 
+    public void acceptBlock(Modifier modifier, Runnable block) {
+        parent.acceptModifier(modifier, block);
+    }
+
     public List<PicoTestcaseDescriptor> getTests() {
         return Collections.unmodifiableList(tests);
     }

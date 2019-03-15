@@ -1,5 +1,6 @@
 package nl.jqno.picotest;
 
+import nl.jqno.picotest.examples.BeforeEachTest;
 import nl.jqno.picotest.examples.ExampleTest;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.testkit.engine.EngineTestKit;
@@ -22,6 +23,19 @@ class EngineExecutionTest {
                         .aborted(0)
                         .skipped(1)
                         .finished(4));
+    }
+
+    @Test
+    void verifyBeforeEach() {
+        EngineTestKit
+                .engine("picotest")
+                .selectors(selectClass(BeforeEachTest.class))
+                .execute()
+                .tests()
+                .assertStatistics(stats -> stats
+                        .started(4)
+                        .succeeded(3)
+                        .failed(1));
     }
 
 }

@@ -1,5 +1,6 @@
 package nl.jqno.picotest;
 
+import nl.jqno.picotest.engine.Modifier;
 import nl.jqno.picotest.engine.TestCollector;
 import org.junit.platform.commons.annotation.Testable;
 
@@ -15,6 +16,10 @@ public abstract class Test {
     @Testable
     public final void skip(String reason, String description, Runnable test) {
         collector.acceptSkip(description, reason, test);
+    }
+
+    public final void beforeEach(Runnable block) {
+        collector.acceptBlock(Modifier.BEFORE_EACH, block);
     }
 
     public void setCollector(TestCollector collector) {

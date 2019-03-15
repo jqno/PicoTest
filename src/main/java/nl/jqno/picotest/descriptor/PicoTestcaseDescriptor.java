@@ -1,5 +1,6 @@
 package nl.jqno.picotest.descriptor;
 
+import nl.jqno.picotest.engine.Modifier;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -9,12 +10,14 @@ import org.junit.platform.engine.support.descriptor.FilePosition;
 import java.util.Arrays;
 
 public class PicoTestcaseDescriptor extends PicoTestDescriptor {
+    private final PicoTestDescriptor parent;
     private final boolean isSkipped;
     private final String skipReason;
     private final Runnable test;
 
     public PicoTestcaseDescriptor(PicoTestDescriptor parent, String displayName, boolean isSkipped, String skipReason, Runnable test) {
         super(parent, generateUniqueId(parent, displayName), parent.getTestClass(), displayName, determineSource(parent.getTestClass()));
+        this.parent = parent;
         this.isSkipped = isSkipped;
         this.skipReason = skipReason;
         this.test = test;
@@ -44,6 +47,10 @@ public class PicoTestcaseDescriptor extends PicoTestDescriptor {
 
     public String getSkipReason() {
         return skipReason;
+    }
+
+    public void run(Modifier modifier) {
+        parent.getBlock(modifier).run();
     }
 
     @Override
