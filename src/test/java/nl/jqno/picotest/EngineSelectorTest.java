@@ -20,28 +20,28 @@ public class EngineSelectorTest {
     @Test
     void moduleSelector() {
         // Running the tests on the classpath, so only the root container will trigger
-        verifySelector(1, selectModule("nl.jqno.picotest"));
+        verifySelector(1, 1, selectModule("nl.jqno.picotest"));
     }
 
     @Test
     void classpathRootSelector() throws URISyntaxException {
         var classpathRoot = Paths.get(testToSelect.getProtectionDomain().getCodeSource().getLocation().toURI());
-        verifySelector(6, selectClasspathRoots(Collections.singleton(classpathRoot)).get(0));
+        verifySelector(14, 12, selectClasspathRoots(Collections.singleton(classpathRoot)).get(0));
     }
 
     @Test
     void packageSelector() {
-        verifySelector(3, selectPackage(testToSelect.getPackageName()));
+        verifySelector(3, 3, selectPackage(testToSelect.getPackageName()));
     }
 
     @Test
     void classSelector() {
-        verifySelector(3, selectClass(testToSelect));
+        verifySelector(3, 3, selectClass(testToSelect));
     }
 
     @Test
     void methodSelector() {
-        verifySelector(3, selectMethod(testToSelect, "test"));
+        verifySelector(3, 3, selectMethod(testToSelect, "test"));
     }
 
     @Test
@@ -50,15 +50,15 @@ public class EngineSelectorTest {
                 .append("class", testToSelect.getCanonicalName())
                 .append("method", "test")
                 .append("case", "test");
-        verifySelector(3, selectUniqueId(uniqueId));
+        verifySelector(3, 3, selectUniqueId(uniqueId));
     }
 
-    private void verifySelector(int expected, DiscoverySelector... selectors) {
+    private void verifySelector(int total, int successful, DiscoverySelector... selectors) {
         engine
                 .selectors(selectors)
                 .execute()
                 .containers()
-                .assertStatistics(stats -> stats.started(expected).succeeded(expected).finished(expected));
+                .assertStatistics(stats -> stats.started(total).succeeded(successful).finished(total));
     }
 
 }

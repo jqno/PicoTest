@@ -31,7 +31,7 @@ class EngineExecutionTest {
 
     @Test
     void verifyBeforeAndAfterEach() {
-        assertEquals(List.of(), BeforeAndAfterEachTest.log);
+        BeforeAndAfterEachTest.log.clear();
         var results = EngineTestKit
                 .engine("picotest")
                 .selectors(selectClass(BeforeAndAfterEachTest.class))
@@ -48,7 +48,7 @@ class EngineExecutionTest {
 
     @Test
     void verifyBeforeAndAfterAll() {
-        assertEquals(List.of(), BeforeAndAfterAllTest.log);
+        BeforeAndAfterAllTest.log.clear();
         EngineTestKit
                 .engine("picotest")
                 .selectors(selectClass(BeforeAndAfterAllTest.class))
