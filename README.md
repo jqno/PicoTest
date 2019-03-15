@@ -2,6 +2,8 @@
 
 An ultra-minimal unit-testing framework, based on the JUnit 5 Platform.
 
+PicoTest does not provide an assertion library; you will need to use JUnit, Hamcrest, AssertJ, or something similar.
+
 ## How to use:
 
 ```java
@@ -34,6 +36,8 @@ public class ExampleTest extends Test {
     }
 }
 ```
+
+PicoTest also supports `beforeEach()`, `afterEach()`, `beforeAll()` and `afterAll()`.
 
 ## How to add to your project
 
