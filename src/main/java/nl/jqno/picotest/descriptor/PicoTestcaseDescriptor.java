@@ -7,7 +7,6 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.FilePosition;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public class PicoTestcaseDescriptor extends PicoTestDescriptor {
     private final boolean isSkipped;
@@ -50,10 +49,5 @@ public class PicoTestcaseDescriptor extends PicoTestDescriptor {
     @Override
     public Type getType() {
         return Type.TEST;
-    }
-
-    @Override
-    public Optional<TestSource> getSource() {
-        return Optional.of(ClassSource.from("nl.jqno.picotest.examples.ExampleTest", FilePosition.from(10)));
     }
 }
