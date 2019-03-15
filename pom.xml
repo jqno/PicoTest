@@ -8,6 +8,9 @@
     <artifactId>picotest</artifactId>
     <version>0.1-SNAPSHOT</version>
 
+    <name>PicoTest</name>
+    <description>An ultra-minimal unit test framework based on the JUnit 5 Platform</description>
+
     <properties>
         <encoding>UTF-8</encoding>
 
