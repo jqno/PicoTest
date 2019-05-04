@@ -43,6 +43,14 @@ public class ExampleTest extends Test {
 
 PicoTest also supports `beforeEach()`, `afterEach()`, `beforeAll()` and `afterAll()`.
 
+## Support
+
+PicoTest is supported everywhere that JUnit 5 is supported. This includes IntelliJ and Maven:
+
+<img src="readme/intellij.png" width="300"/>
+
+<img src="readme/maven.png" width="900"/>
+
 ## How to add to your project
 
 Ensure the following is in your `pom.xml`:
